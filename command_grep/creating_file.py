@@ -50,14 +50,25 @@ def generate_incorrect_line(error_type):
 def generate_file(correct_lines, incorrect_lines, filename="file.txt"):
     """Генерирует файл с заданным количеством правильных и неправильных строк."""
     with open(filename, "w") as f:
-        for _ in range(correct_lines):
-            f.write(generate_correct_line() + "\n")
-
+        both_lines = correct_lines + incorrect_lines
         error_types = ["no_phone", "no_email", "wrong_phone", "wrong_email", "no_phone_no_email"]
-        for _ in range(incorrect_lines):
-            f.write(generate_incorrect_line(random.choice(error_types)) + "\n")
+        for _ in range(both_lines):
+            which_type = random.choice([True, False])
+            if incorrect_lines == 0:
+                which_type = False
+            if correct_lines == 0:
+                which_type = True
+
+            if which_type:
+                f.write(generate_incorrect_line(random.choice(error_types)) + "\n")
+                incorrect_lines -= 1
+            else:
+                f.write(generate_correct_line() + "\n")
+                correct_lines -= 1
+
 
 if __name__ == "__main__":
+    """Здесь можно установить количество правильных и неправильных строк"""
     correct_lines_count = 100
     incorrect_lines_count = 10
     generate_file(correct_lines_count, incorrect_lines_count)
